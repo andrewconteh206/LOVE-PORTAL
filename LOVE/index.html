@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For my Teddy Bear 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#ffd6e8; --bg2:#ff9ec7; --ink:#7a1f4d; --card:#fff7fb; --hot:#ff4f9a; --paper:#ffe9f3;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg1:#ffd6e8;--bg2:#ff9ec7;--ink:#7a1f4d;--card:#fff7fb;--hot:#ff4f9a;--paper:#ffe9f3}}
+:root[data-theme="dark"]{--bg1:#ffd6e8;--bg2:#ff9ec7;--ink:#7a1f4d;--card:#fff7fb;--hot:#ff4f9a;--paper:#ffe9f3}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;height:100%;min-height:100vh;font-family:'Quicksand',system-ui,sans-serif;color:var(--ink);
+  background:radial-gradient(circle at 30% 20%,var(--bg1),var(--bg2));overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
+.float{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.float span{position:absolute;bottom:-40px;font-size:22px;opacity:.7;animation:rise linear infinite}
+@keyframes rise{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+.stage{position:relative;z-index:2;width:min(92vw,420px);padding:16px}
+.screen{display:none}
+.screen.on{display:block;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+h1{font-family:'Pacifico',cursive;font-weight:400;font-size:2rem;margin:0 0 6px}
+.envelope{position:relative;width:240px;height:160px;margin:28px auto 30px;background:#ff7eb6;border-radius:10px;box-shadow:0 14px 30px rgba(122,31,77,.3);animation:sway 3s ease-in-out infinite}
+@keyframes sway{50%{transform:rotate(-3deg) translateY(-6px)}}
+.envelope::before{content:"";position:absolute;inset:0;border-radius:10px;
+  background:linear-gradient(135deg,transparent 50%,#ff94c4 50%) left/50% 100% no-repeat,linear-gradient(225deg,transparent 50%,#ff94c4 50%) right/50% 100% no-repeat}
+.envelope .flap{position:absolute;top:0;left:0;width:100%;height:60%;background:#ff5fa6;clip-path:polygon(0 0,100% 0,50% 100%);border-radius:10px 10px 0 0}
+.envelope .heart{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);font-size:30px;z-index:2}
+.envelope .to{position:absolute;bottom:14px;width:100%;font-family:'Pacifico',cursive;color:#fff;font-size:1.05rem;z-index:2}
+button{font-family:inherit;cursor:pointer;border:0;border-radius:999px;font-weight:700;font-size:1.1rem;padding:14px 32px;color:#fff;background:var(--hot);box-shadow:0 8px 18px rgba(255,79,154,.45);transition:transform .15s}
+button:active{transform:scale(.94)}
+button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.letter{background:var(--card);border-radius:18px;padding:26px 22px;box-shadow:0 16px 36px rgba(122,31,77,.25);border:3px dashed #ffb3d4;text-align:left;max-height:62vh;overflow-y:auto}
+.letter h2{font-family:'Pacifico',cursive;font-weight:400;margin:0 0 10px;font-size:1.5rem}
+.letter p{margin:0 0 10px;line-height:1.6;font-size:1.02rem}
+.from{text-align:right;font-family:'Pacifico',cursive;font-size:1.15rem;margin-top:14px!important}
+.next{margin-top:22px;animation:bounce 1s ease-in-out infinite,glow 1.4s ease-in-out infinite}
+@keyframes bounce{50%{transform:translateY(-12px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 8px 2px rgba(255,79,154,.5)}50%{box-shadow:0 0 28px 12px rgba(255,79,154,.85)}}
+.q{font-family:'Pacifico',cursive;font-size:2.1rem;line-height:1.3;margin:0 0 8px}
+.bear{font-size:64px;animation:sway 2s ease-in-out infinite;display:block}
+.opts{display:flex;gap:14px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+.yes{animation:glow 1.4s ease-in-out infinite}
+.yay h1{font-size:2.4rem}
+.yay p{font-size:1.15rem;line-height:1.5}
+canvas{position:fixed;inset:0;z-index:5;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.envelope,.next,.yes,.bear{animation:none}}
+</style>
+</head>
+<body>
+<div class="float" id="float"></div>
+<canvas id="fx"></canvas>
+<audio id="song" src="romantic.mp3" loop preload="auto"></audio>
+<button id="musicBtn" aria-label="Music on or off" style="position:fixed;top:14px;right:14px;z-index:9;padding:10px 14px;font-size:1.2rem;display:none">🎵</button>
+
+<main class="stage">
+  <section class="screen on" id="s1">
+    <h1>A little something 💕</h1>
+    <div class="envelope"><div class="flap"></div><div class="heart">💗</div><div class="to">for my TEDDY BEAR 🧸</div></div>
+    <button id="openBtn">Press to open</button>
+  </section>
+
+  <section class="screen" id="s2">
+    <div class="letter">
+      <h2>Hey my teddy bear 🧸</h2>
+      <p>There’s something I’ve been wanting to tell you, and I finally decided to put it into words. Honestly, I don’t know what the future holds, but I know that I want to give you a special place in my life. 🫶🏽💕</p>
+      <p>I want to be the person who makes you smile when you’re sad, the one who checks on you when you’re not feeling okay, I’m not promising to be perfect, but I promise to be genuine with you, to respect you, to care for you en ah promise to eat your kitty better and treat u like a princess</p>
+      <p class="from">From, Pa Musa 😘</p>
+    </div>
+    <button class="next" id="nextBtn">Next 💌</button>
+  </section>
+
+  <section class="screen" id="s3">
+    <span class="bear">🧸</span>
+    <p class="q">Will u be my girlfriend?</p>
+    <div class="opts">
+      <button class="yes" id="y1">YES 💖</button>
+      <button class="yes" id="y2">YES 💕</button>
+    </div>
+  </section>
+
+  <section class="screen yay" id="s4">
+    <span class="bear">🥰</span>
+    <h1>She said YES!!! 🎉</h1>
+    <p>You just made me the happiest guy alive, my Teddy Bear. I love you! 💞</p>
+    <p class="from">— Pa Musa</p>
+  </section>
+</main>
+
+<script>
+(function(){
+  var fl=document.getElementById('float'),em=['💗','💕','💖','🌸','✨','💞'];
+  for(var i=0;i<18;i++){var s=document.createElement('span');s.textContent=em[i%em.length];
+    s.style.left=(Math.random()*100)+'%';s.style.fontSize=(16+Math.random()*22)+'px';
+    s.style.animationDuration=(7+Math.random()*8)+'s';s.style.animationDelay=(-Math.random()*10)+'s';fl.appendChild(s);}
+  function show(id){document.querySelectorAll('.screen').forEach(function(e){e.classList.remove('on')});document.getElementById(id).classList.add('on');}
+  var song=document.getElementById('song'),mb=document.getElementById('musicBtn');
+  document.getElementById('openBtn').onclick=function(){
+    show('s2');
+    song.play().catch(function(){});
+    mb.style.display='block';
+  };
+  mb.onclick=function(){
+    if(song.paused){song.play();mb.textContent='🎵'}
+    else{song.pause();mb.textContent='🔇'}
+  };
+  document.getElementById('nextBtn').onclick=function(){show('s3')};
+
+  var cv=document.getElementById('fx'),cx=cv.getContext('2d'),P=[],run=false;
+  function size(){cv.width=innerWidth;cv.height=innerHeight}size();addEventListener('resize',size);
+  var cols=['#ff4f9a','#ffd1e6','#fff','#ffcf33','#ff8fc2','#b86bff'];
+  function burst(x,y,n){for(var i=0;i<n;i++){var a=Math.random()*Math.PI*2,v=4+Math.random()*9;
+    P.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-4,g:.18,l:120+Math.random()*60,c:cols[i%cols.length],s:5+Math.random()*7,h:Math.random()<.4})}}
+  function tick(){cx.clearRect(0,0,cv.width,cv.height);
+    P.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.vx*=.99;p.l--;cx.globalAlpha=Math.max(p.l/60,0);cx.fillStyle=p.c;
+      if(p.h){cx.font=(p.s*2.5)+'px serif';cx.fillText('💖',p.x,p.y)}else{cx.fillRect(p.x,p.y,p.s,p.s*.6)}});
+    P=P.filter(function(p){return p.l>0});
+    if(P.length||run)requestAnimationFrame(tick);else cx.clearRect(0,0,cv.width,cv.height)}
+  function celebrate(){show('s4');run=true;tick();
+    var t=0,iv=setInterval(function(){burst(Math.random()*cv.width,Math.random()*cv.height*.6,60);if(++t>10){clearInterval(iv);run=false}},350);
+    burst(cv.width/2,cv.height/2,120);
+    for(var i=0;i<30;i++){(function(){var d=document.createElement('span');d.textContent=em[Math.floor(Math.random()*em.length)];
+      d.style.cssText='position:fixed;top:-40px;z-index:6;font-size:'+(20+Math.random()*24)+'px;left:'+Math.random()*100+'%;transition:transform '+(3+Math.random()*3)+'s linear,opacity 1s 3s';
+      document.body.appendChild(d);setTimeout(function(){d.style.transform='translateY('+(innerHeight+80)+'px) rotate(360deg)';d.style.opacity=0},50+Math.random()*1500);
+      setTimeout(function(){d.remove()},7000)})()}}
+  document.getElementById('y1').onclick=celebrate;
+  document.getElementById('y2').onclick=celebrate;
+})();
+</script>
+</body>
+</html>
